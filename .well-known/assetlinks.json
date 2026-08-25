@@ -1,0 +1,8 @@
+[{
+      "relation": ["delegate_permission/common.handle_all_urls"],
+      "target": {
+        "namespace": "android_app",
+        "package_name": "io.github.ffdiamondhubofficial.twa",
+        "sha256_cert_fingerprints": ["BD:C5:E5:A4:E4:4D:1A:2F:9E:64:94:F9:76:BA:0C:72:38:81:A6:09:3C:FC:AE:F9:0F:EA:4F:29:36:C6:49:E0"]
+      }
+    }]
