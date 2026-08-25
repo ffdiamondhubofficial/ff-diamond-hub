@@ -1,0 +1,590 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>FF Diamond Hub</title>
+
+<style>
+*{margin:0;padding:0;box-sizing:border-box;font-family:Arial}
+body{
+background:linear-gradient(135deg,#020b22,#07183c,#0f2a63);
+color:#fff;
+}
+
+.header{
+padding:18px;
+display:flex;
+justify-content:space-between;
+align-items:center;
+background:rgba(255,255,255,.05);
+backdrop-filter:blur(10px);
+position:sticky;
+top:0;
+}
+
+.logo{
+font-size:26px;
+font-weight:bold;
+color:#41ff7b;
+}
+
+.badge{
+background:#25d366;
+padding:8px 14px;
+border-radius:20px;
+color:black;
+font-weight:bold;
+}
+
+.container{
+padding:18px;
+}
+
+.card{
+background:rgba(255,255,255,.05);
+backdrop-filter:blur(12px);
+border:1px solid rgba(255,255,255,.08);
+padding:20px;
+border-radius:24px;
+margin-bottom:20px;
+box-shadow:0 0 25px rgba(0,255,120,.08);
+}
+
+.offer{
+background:linear-gradient(135deg,#00c853,#1de9b6);
+color:#001c0f;
+}
+
+.offer h2{
+font-size:28px;
+margin-bottom:8px;
+}
+
+input{
+width:100%;
+padding:14px;
+border:none;
+border-radius:14px;
+margin-top:12px;
+background:#0d1b33;
+color:white;
+}
+
+.grid{
+display:grid;
+grid-template-columns:repeat(2,1fr);
+gap:12px;
+margin-top:14px;
+}
+
+.pack{
+background:#15264b;
+padding:16px;
+border-radius:16px;
+text-align:center;
+cursor:pointer;
+border:2px solid transparent;
+}
+
+.pack.active{
+border-color:#42ff80;
+box-shadow:0 0 15px rgba(66,255,128,.4);
+}
+
+button{
+width:100%;
+padding:15px;
+border:none;
+border-radius:14px;
+margin-top:15px;
+background:linear-gradient(90deg,#22c55e,#16a34a);
+font-size:17px;
+font-weight:bold;
+color:black;
+}
+
+.status{
+text-align:center;
+font-size:20px;
+margin-top:12px;
+color:#4dff88;
+font-weight:bold;
+}
+
+.history div{
+padding:10px;
+border-bottom:1px solid rgba(255,255,255,.08);
+}
+
+.admin{
+position:fixed;
+inset:0;
+display:none;
+justify-content:center;
+align-items:center;
+background:rgba(0,0,0,.8);
+padding:20px;
+}
+
+.panel{
+background:#162442;
+padding:20px;
+border-radius:18px;
+width:100%;
+max-width:380px;
+}
+
+.small{
+font-size:13px;
+color:#b6c6e5;
+margin-top:8px;
+text-align:center;
+}
+</style>
+<link rel="manifest" href="manifest.json">
+<meta name="theme-color" content="#22c55e">
+</head>
+<!-- Demo QR Popup -->
+<div id="qrPopup" style="display:none;position:fixed;inset:0;background:rgba(0,0,0,.85);justify-content:center;align-items:center;z-index:9999;">
+  <div style="background:#162442;padding:22px;border-radius:20px;width:90%;max-width:340px;text-align:center;">
+    <h2>🎁 Welcome Offer</h2> 
+    <p id="popupPack" style="margin:8px 0;color:#b6c6e5;">
+  Select a Pack
+    </p>
+    <div style="background:white;border-radius:16px;padding:16px;margin:15px 0;text-align:center;">
+
+  <img id="qrImage"
+       src=""
+       style="width:200px;height:200px;display:none;border-radius:10px;object-fit:contain;margin:auto;">
+
+  <div id="qrDemo"
+       style="width:200px;height:200px;margin:auto;background:
+       repeating-linear-gradient(0deg,#000 0 8px,#fff 8px 16px),
+       repeating-linear-gradient(90deg,#000 0 8px,#fff 8px 16px);
+       border-radius:10px;"></div>
+
+  <p id="qrText" style="color:black;font-weight:bold;margin-top:10px;">
+    DEMO QR
+  </p>
+
+    </div>
+
+    <button onclick="closeQR()">Close</button>
+
+    <p style="font-size:12px;color:#9fb3d9;margin-top:10px;">
+      Take screenshot ( Complete your Payment Now )
+    </p>
+  </div>
+</div>
+<body>
+
+<div class="header">
+<div class="logo" id="appName"
+     onmousedown="startPress()"
+     onmouseup="stopPress()"
+     ontouchstart="startPress()"
+     ontouchend="stopPress()">
+  FF Diamond Hub
+</div>
+<div class="badge">100% Verified</div>
+</div>
+
+<div class="container">
+
+<div class="card offer">
+<h2>🎁 Welcome Offer</h2>
+<p>New User Special</p>
+
+<h1 style="margin:12px 0;">1005 Diamonds</h1>
+<h2>₹200Rs</h2>
+
+<p>Your First-time offer.</p>
+
+<button onclick="claimOffer(false)">Claim Offer</button>
+</div>
+
+<div class="card">
+<h2>Free Fire UID</h2>
+
+<input id="uid" placeholder="Enter UID" oninput="showUidSave()">
+
+<button id="saveUidBtn"
+        onclick="saveUID()"
+        style="display:none;background:#2563eb;color:white;">
+  💾 Save UID
+</button>
+
+
+</div>
+
+<div class="card">
+
+<h2>Select Diamond Pack</h2>
+
+<div class="grid">
+
+<div class="pack" data-pack="35" data-price="20">35💎<br>₹20</div>
+
+<div class="pack" data-pack="60" data-price="40">60💎<br>₹40</div>
+
+<div class="pack" data-pack="130" data-price="80">130💎<br>₹80</div>
+
+<div class="pack" data-pack="300" data-price="160">300💎<br>₹160</div>
+
+<div class="pack" data-pack="580" data-price="320">580💎<br>₹320</div>
+
+<div class="pack" data-pack="1360" data-price="540">1360💎<br>₹540</div>
+
+</div>
+
+<button onclick="placeOrder()">Place Order</button>
+
+<div class="status" id="status"></div>>
+</div>
+
+<div class="card">
+
+<h2 onclick="openHistory()" style="cursor:pointer;">📜 Order History</h2>
+
+<div class="history" id="history" style="display:none;"></div>
+</div>
+
+<div class="card">
+
+<button onclick="contactAdmin()">💬 Contact (WhatsApp)</button>
+
+<button id="adminBtn" onclick="openAdmin()" style="display:none;">
+  ⚙️ Admin Panel
+</button>
+</div>
+
+</div>
+
+<div class="admin" id="admin">
+
+<div class="panel">
+
+<h2>Login</h2>
+
+<input id="pass" type="password" placeholder="Enter Password">
+
+<div id="adminFields" style="display:none;">
+
+<input id="nameInput" placeholder="App Name">
+
+<input id="offerInput" placeholder="Welcome Offer">
+<label style="margin-top:10px;display:block;">Change QR (Gallery)</label>
+
+<input type="file" id="qrFile" accept="image/*">
+  <button id="saveDemoBtn"
+        onclick="saveDemoImage()"
+        style="display:none;background:#2563eb;color:white;">
+  ✅ OK (Save Image)
+  </button>
+<button onclick="saveAdmin()">Save</button>
+
+</div>
+
+<button onclick="loginAdmin()">Login</button>
+
+<button onclick="closeAdmin()">Close</button>
+
+</div>
+</div>
+
+<div id="historyPopup" style="display:none;position:fixed;inset:0;background:rgba(0,0,0,.8);justify-content:center;align-items:center;z-index:9999;">
+  <div style="background:#162442;width:90%;max-width:360px;border-radius:20px;padding:20px;max-height:80vh;overflow:auto;">
+    <h2 style="text-align:center;">📜 Order History</h2>
+    <div id="historyList"></div>
+    <button onclick="closeHistory()">Close</button>
+  </div>
+</div>
+
+<script>// ===== Gallery QR Upload =====
+
+const qrFile = document.getElementById("qrFile");
+const qrImage = document.getElementById("qrImage");
+const qrText = document.getElementById("qrText");
+
+if(localStorage.qrImage){
+
+qrImage.src = localStorage.qrImage;
+
+qrImage.style.display="block";
+
+qrText.style.display="none";
+
+}
+
+qrFile?.addEventListener("change", function(){
+
+const file = this.files[0];
+
+if(!file) return;
+
+const reader = new FileReader();
+
+reader.onload = function(e){
+
+localStorage.qrImage = e.target.result;
+
+qrImage.src = e.target.result;
+
+qrImage.style.display="block";
+
+qrText.style.display="none";
+
+};
+
+reader.readAsDataURL(file);
+
+});
+ function showUidSave(){
+
+  const uid=document.getElementById("uid").value.trim();
+
+  document.getElementById("saveUidBtn").style.display=
+    uid ? "block" : "none";
+
+}
+
+function saveUID(){
+
+  const uid = document.getElementById("uid").value.trim();
+
+  if(uid===""){
+    alert("Enter UID");
+    return;
+  }
+
+  localStorage.ff_uid = uid;
+
+  document.getElementById("saveUidBtn").style.display = "none";
+
+const popup = document.getElementById("uidPopup");
+
+popup.style.display = "block";
+popup.style.top = "-80px";
+
+setTimeout(function(){
+  popup.style.top = "20px";
+},10);
+
+setTimeout(function(){
+  popup.style.top = "-80px";
+
+  setTimeout(function(){
+    popup.style.display = "none";
+  },350);
+
+},2000);
+}
+let selectedPack="";
+let selectedPrice="";
+
+document.querySelectorAll(".pack").forEach(p=>{
+
+p.onclick=()=>{
+
+document.querySelectorAll(".pack").forEach(x=>x.classList.remove("active"));
+
+p.classList.add("active");
+
+selectedPack=p.dataset.pack;
+
+selectedPrice=p.dataset.price;
+
+};
+
+});
+
+function claimOffer(isOrder = false){
+
+  if(isOrder){
+    document.getElementById("popupPack").innerHTML =
+      selectedPack + " Diamonds – ₹" + selectedPrice;
+  }else{
+    document.getElementById("popupPack").innerHTML =
+      "1005 Diamonds – ₹200Rs";
+  }
+
+  if(localStorage.qrImage){
+    qrImage.src = localStorage.qrImage;
+    qrImage.style.display = "block";
+    document.getElementById("qrDemo").style.display = "none";
+    qrText.style.display = "none";
+  }else{
+    qrImage.style.display = "none";
+    document.getElementById("qrDemo").style.display = "block";
+    qrText.style.display = "block";
+  }
+
+  document.getElementById("qrPopup").style.display = "flex";
+}
+
+function closeQR(){
+  document.getElementById("qrPopup").style.display="none";
+}
+
+function placeOrder(){
+
+const uid=document.getElementById("uid").value.trim();
+
+if(uid===""){alert("Enter UID");return;}
+
+if(selectedPack===""){alert("Select Diamond Pack");return;}
+
+const order={
+
+uid:uid,
+
+pack:selectedPack,
+
+price:selectedPrice,
+
+time:new Date().toLocaleString()
+
+};
+
+let arr=JSON.parse(localStorage.orders||"[]");
+
+arr.unshift(order);
+
+localStorage.orders=JSON.stringify(arr);
+
+loadHistory();
+
+status.innerHTML="Order Request Saved";
+loadQR();
+claimOffer(true);
+}
+function loadQR(){
+
+  if(localStorage.qrImage){
+    qrImage.src = localStorage.qrImage;
+    qrImage.style.display = "block";
+    document.getElementById("qrDemo").style.display = "none";
+    qrText.style.display = "none";
+  }else{
+    qrImage.style.display = "none";
+    document.getElementById("qrDemo").style.display = "block";
+    qrText.style.display = "block";
+  }
+
+  }
+
+function loadHistory(){
+  const history=document.getElementById("history");
+  history.innerHTML="";
+  let myOrders=JSON.parse(localStorage.orders||"[]");
+  myOrders.forEach(o=>{
+    history.innerHTML+=`<div><b>${o.pack}💎 - ₹${o.price}</b><br><span style="color:#ffd54f;">Pending</span></div>`;
+  });
+}
+
+function openHistory(){
+  const list=document.getElementById("historyList");
+  list.innerHTML="";
+  const packs=[[35,20],[60,40],[130,80],[300,160],[580,320],[1360,540]];
+  for(let i=1;i<=57;i++){
+    const p=packs[i%packs.length];
+    const ok=i<=40;
+    list.innerHTML+=`<div style="padding:12px;border-bottom:1px solid rgba(255,255,255,.08)"><b>${p[0]}💎 - ₹${p[1]}</b><br>UID: ${100000000+i}<br><span style="font-weight:bold;color:${ok?'#4dff88':'#ffd54f'}">${ok?'✅ Successful':'🟡 Pending'}</span></div>`;
+  }
+  document.getElementById("historyPopup").style.display="flex";
+}
+
+function closeHistory(){
+  document.getElementById("historyPopup").style.display="none";
+}
+
+let pressTimer;
+
+function startPress(){
+  pressTimer = setTimeout(()=>{
+    openAdmin();
+  },3000);
+}
+
+function stopPress(){
+  clearTimeout(pressTimer);
+                         }
+  function contactAdmin(){
+  
+  window.open("https://wa.me/911234567890","_blank");
+  
+  }
+  
+  function openAdmin(){
+  
+  admin.style.display="flex";
+  
+  }
+  
+  function closeAdmin(){
+  
+  admin.style.display="none";
+  
+  pass.value="";
+  
+  adminFields.style.display="none";
+  
+  }
+  
+  function loginAdmin(){
+  
+  if(pass.value==="$hivam723$"){
+  
+  adminFields.style.display="block";
+  
+  nameInput.value=localStorage.appName||appName.textContent;
+  
+  offerInput.value=localStorage.offer||"1005 Diamonds - ₹200Rs";
+  
+  }else{
+  
+  alert("Wrong Password");
+  
+  }
+  
+  }
+  
+  function saveDemoImage(){ saveAdmin(); }
+
+function saveAdmin(){
+  
+  localStorage.appName=nameInput.value;
+  
+  localStorage.offer=offerInput.value;
+  
+  appName.textContent=nameInput.value||"FF Diamond Hub";
+  
+  alert("Saved");
+  
+  }
+  
+  window.onload=()=>{
+
+  appName.textContent=localStorage.appName||"FF Diamond Hub";
+
+  loadHistory();
+
+  if(localStorage.ff_uid){
+
+    uid.value=localStorage.ff_uid;
+
+
+  }
+
+};
+  
+  
+</script>
+
+<div id="uidPopup" style="display:none;position:fixed;top:-80px;left:50%;transform:translateX(-50%);background:#22c55e;color:white;padding:14px 20px;border-radius:14px;font-weight:bold;z-index:99999;box-shadow:0 8px 20px rgba(0,0,0,.35);transition:all .35s ease;min-width:260px;text-align:center;">
+  ✅ UID Saved Successfully
+</div>
+
+<script>if("serviceWorker" in navigator){navigator.serviceWorker.register("service-worker.js");}</script>
+</body>
